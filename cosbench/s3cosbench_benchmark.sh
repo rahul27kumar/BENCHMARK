@@ -74,6 +74,7 @@ system_monitoring()
              line=`tail -n 1 ~/cos/log/system.log | grep "throughput"`
              if [[ "$line" = *"op1.dispose.delete.dispose"* ]]
              then
+                echo 'Successfully completed'
                 break
              fi
 
