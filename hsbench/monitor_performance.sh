@@ -14,7 +14,6 @@ then
     if [[ "$line" = *"PUT"* ]]  || [[ "$line" = *"GET"* ]]
     then
         ops=$(echo "$line" | cut -f 10 -d ' ' | tr -d ',' | tr -d ' ')
-        echo "Operation Types: $ops"
         Th=$(echo "$line" | cut -f 14 -d ' ' | tr -d ',' | tr -d ' ')
         IOPS=$(echo "$line" | cut -f 16 -d ' ' | tr -d ',' | tr -d ' ')
         Lat=$(echo "$line" | cut -f 22 -d ' ' | tr -d ',' | tr -d ' ')
@@ -34,6 +33,4 @@ then
         curl -i -XPOST "$URL" --data-binary "$update_value_3"
      
     fi
-else 
-    exit
 fi
