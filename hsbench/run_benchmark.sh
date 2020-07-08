@@ -70,10 +70,9 @@ hotsause_benchmark()
                done 
            done
         done
+        echo 'Successfully completed'
         mv $CURRENTPATH/*.json $CURRENTPATH/benchmark.log/$MKDIR/
         COUNT=$(($COUNT + 1))
-        #sleep 30
-       # python3 /root/perf_testing/table_formatter.py $BENCHMARKLOG/$MKDIR/    #> /root/perf_testing/table.log/$MKDIR\.table
     done
 } 
 
