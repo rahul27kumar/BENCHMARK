@@ -67,20 +67,25 @@ config_s3workloads() {
 system_monitoring()
 {
       systemctl start telegraf
+      sleep 60
       while [ true ]
-      do
+      do 
          if tail -n 1 ~/cos/log/system.log | grep "throughput" > /dev/null 2>&1;
          then
              line=`tail -n 1 ~/cos/log/system.log | grep "throughput"`
              if [[ "$line" = *"op1.dispose.delete.dispose"* ]]
              then
-                echo 'Successfully completed'
                 break
+             else
+                ./monitor_performance.sh $size ~/cos/log/system.log cosbench
+                sleep $SAMPLE
              fi
-
-             ./monitor_performance.sh $size ~/cos/log/system.log cosbench
-             sleep $SAMPLE
+         
+         elif tail -n 1 ~/cos/log/system.log | grep "dispose" > /dev/null 2>&1;
+         then
+             break
          fi
+         
       done
       systemctl stop telegraf
 }
