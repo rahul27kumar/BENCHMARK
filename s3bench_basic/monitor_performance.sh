@@ -19,9 +19,11 @@ then
         update_value_1="Latency,host=`hostname`,operation=$ops,Obj_size=$OBJECT_SIZE,Benchmark_Type=$BENCHMARK,region=us-west value=$latency"
         update_value_2="Throughput,host=`hostname`,operation=$ops,Obj_size=$OBJECT_SIZE,Benchmark_Type=$BENCHMARK,region=us-west value=$th_value"
         update_value_3="IOPS,host=`hostname`,operation=$ops,Obj_size=$OBJECT_SIZE,Benchmark_Type=$BENCHMARK,region=us-west value=$IOPS"
-        curl -i -XPOST "$URL" --data-binary "$update_value_1"
-        curl -i -XPOST "$URL" --data-binary "$update_value_2"
-        curl -i -XPOST "$URL" --data-binary "$update_value_3"
+        curl -i -XPOST "$URL" --data-binary "$update_value_1" > /dev/null 2>&1;
+        curl -i -XPOST "$URL" --data-binary "$update_value_2" > /dev/null 2>&1;
+        curl -i -XPOST "$URL" --data-binary "$update_value_3" > /dev/null 2>&1;
+        echo "$ops Data captured for Latency, Throughput and IOPS..."
+
     fi
 fi
 
