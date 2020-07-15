@@ -1,6 +1,7 @@
 #!/bin/bash
+source /root/BENCHMARK/influxdbDetails.conf
 INFLUXDB=`cat /etc/telegraf/telegraf.conf | grep -A 3 outputs.influxdb | grep urls | cut -d "=" -f2 | tr -d '"[]' | tr -d ' '`
-URL="$INFLUXDB/write?db=testdb"
+URL="$INFLUXDB/write?db=$benchmarkdb"
 host=`hostname`
 OBJECT_SIZE=$(echo "$1" | sed -e 's/M/Mb/g' )
 BENCHMARK=$3
