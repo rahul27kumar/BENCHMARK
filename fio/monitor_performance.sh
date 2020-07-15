@@ -4,11 +4,9 @@ URL="$INFLUXDB/write?db=testdb"
 host=`hostname`
 OBJECT_SIZE=$(echo "$1" | sed -e 's/M/Mb/g' )
 BENCHMARK=$3
-OPS=$(echo "$LINE" | awk '{print $1}'| tr -d ':' | tr -d ' ' )
 
 
 tail -n 36 $2 | grep -e 'read\|write' > DATA
-
 while IFS= read -r line
 do
     OPS=$(echo "$line" | awk '{print $1}'| tr -d ':' | tr -d ' ' )
@@ -16,7 +14,6 @@ do
     IOPS=$(echo "$line" | grep -e 'read\|write' | awk '{print $2}' | cut -d "=" -f2 | sed -e 's/,//g' )
     LAT=$(echo "$line" | grep -e 'read\|write' | awk '{print $4}' | cut -d ")" -f2 | cut -d "/" -f2 | sed -e 's/[a-z]//g')
     ops=${OPS^}
-    echo "OPS : $ops TH : $TH IOPS : $IOPS LAT : $LAT"
     update_value_1="Latency,host=`hostname`,operation=$ops,Obj_size=$OBJECT_SIZE,Benchmark_Type=$BENCHMARK,region=us-west value=$LAT"
     update_value_2="Throughput,host=`hostname`,operation=$ops,Obj_size=$OBJECT_SIZE,Benchmark_Type=$BENCHMARK,region=us-west value=$TH"
     update_value_3="IOPS,host=`hostname`,operation=$ops,Obj_size=$OBJECT_SIZE,Benchmark_Type=$BENCHMARK,region=us-west value=$IOPS"
