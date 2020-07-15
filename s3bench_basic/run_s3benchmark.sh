@@ -64,14 +64,14 @@ do
            mkdir $MKDIR
           
 
-           echo "$BINPATH/s3bench -accessKey=$ACCESS_KEY  -accessSecret=$SECRET_KEY -bucket=$BUCKETNAME -endpoint $ENDPOINTS -numClients $NUMCLIENTS -numSamples $NO_OF_SAMPLES -objectSize $value -verbose > $MKDIR/s3bench_Numclients_$NUMCLIENTS\_NS_$NO_OF_SAMPLES\_size_$SIZE_OF_OBJECTS.log" 
+           echo "$BINPATH/s3bench -accessKey=$ACCESS_KEY  -accessSecret=$SECRET_KEY -bucket=$bucket -endpoint $ENDPOINTS -numClients $NUMCLIENTS -numSamples $NO_OF_SAMPLES -objectSize $value -verbose > $MKDIR/s3bench_Numclients_$NUMCLIENTS\_NS_$NO_OF_SAMPLES\_size_$SIZE_OF_OBJECTS.log" 
 
 
-           $BINPATH/s3bench -accessKey=$ACCESS_KEY  -accessSecret=$SECRET_KEY -bucket=$BUCKETNAME -endpoint $ENDPOINTS -numClients $NUMCLIENTS -numSamples $NO_OF_SAMPLES -objectSize $value -verbose > $MKDIR/s3bench_Numclients_$NUMCLIENTS\_NS_$NO_OF_SAMPLES\_size_$SIZE_OF_OBJECTS.log &
+           $BINPATH/s3bench -accessKey=$ACCESS_KEY  -accessSecret=$SECRET_KEY -bucket=$bucket -endpoint $ENDPOINTS -numClients $NUMCLIENTS -numSamples $NO_OF_SAMPLES -objectSize $value -verbose > $MKDIR/s3bench_Numclients_$NUMCLIENTS\_NS_$NO_OF_SAMPLES\_size_$SIZE_OF_OBJECTS.log &
 
            PID=$!
            system_monitoring
-           aws s3 rm s3://$bucket
+           aws s3 rb s3://$bucket
            echo "S3Benchmark is completed for object size : $SIZE_OF_OBJECTS"
         done
         echo "S3Benchmark is completed for number of clients : $NUMCLIENTS"
