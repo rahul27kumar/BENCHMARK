@@ -7,7 +7,7 @@ CURRENTPATH=`pwd`
 BENCHMARKLOG=$CURRENTPATH/benchmark.log
 IO_SIZE=""
 ENDPOINTS=https://s3.seagate.com         
-BUCKETNAME="seagate1"
+BUCKETNAME="seagate"
 CLIENTS=""     
 NUMSAMPLES=""     
 TIMESTAMP=`date +'%Y-%m-%d_%H:%M:%S'`
@@ -36,13 +36,14 @@ show_usage() {
 
 
 s3benchmark() {
-
 for NO_OF_SAMPLES in ${NUMSAMPLES//,/ }     
 do
     for NUMCLIENTS in ${CLIENTS//,/ }
     do 
         for SIZE_OF_OBJECTS in  ${IO_SIZE//,/ }    
         do
+           bucket=$BUCKETNAME-$RANDOM
+           aws s3 mb s3://$bucket
            value=$(echo "$SIZE_OF_OBJECTS" | sed -e 's/Kb//g' | sed -e 's/Mb//g' )
            units=$(echo ${SIZE_OF_OBJECTS:(-2)})
            case "$units" in
@@ -70,6 +71,7 @@ do
 
            PID=$!
            system_monitoring
+           aws s3 rm s3://$bucket
            echo "S3Benchmark is completed for object size : $SIZE_OF_OBJECTS"
         done
         echo "S3Benchmark is completed for number of clients : $NUMCLIENTS"
