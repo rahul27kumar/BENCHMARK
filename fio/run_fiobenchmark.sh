@@ -12,8 +12,6 @@ TIMESTAMP=`date +'%Y-%m-%d_%H:%M:%S'`
 SAMPLE=""
 TEMPLATE=""
 HOSTNAME=`hostname`
-DISKLIST=`find /opt/seagate -name cluster.sls | xargs cat | grep 'hostname\|data_device\|mpath' | grep -A 8 "$HOSTNAME" | cut -d "-" -f5 | grep mpath`
-
 
 validate_args() {
 
@@ -35,7 +33,7 @@ show_usage() {
 }
 
 fio_benchmark() {
-       
+       salt-call pillar.get cluster:`cat /etc/salt/minion_id`:storage:data_devices --output=newline_values_only | cut -d "-" -f4 > DISKLIST       
        for bs in ${BLOCK_SIZE//,/ }
        do
            for numjob in ${NUMOFJOBS//,/ }
@@ -46,11 +44,11 @@ fio_benchmark() {
                    sed -i "/\[global\]/a bs=$bs" $workload_file
                    sed -i "/time_based/a runtime=$TIME_INTERVAL" $workload_file
                    sed -i "/runtime/a numjobs=$numjob" $workload_file
-                   for disk in $DISKLIST
+                   while IFS=  read -r disk
                    do
                        echo -e "\n[$disk]" >> $workload_file
                        echo -e "filename = /dev/disk/by-id/dm-name-$disk \n" >> $workload_file 
-                   done
+                   done < "DISKLIST"
                    FIOLOG=benchmark.log/$TEMPLATE\_bs_$bs\_numjobs_$numjob\.log
                    fio --status-interval=$SAMPLE $workload_file > $FIOLOG & 
                    echo "Fio scripts is running..."
