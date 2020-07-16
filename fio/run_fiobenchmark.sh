@@ -117,6 +117,9 @@ if [ ! -d benchmark.log ]; then
       if [ ! `rpm -qa | grep telegraf` > /dev/null 2>&1 ]; then
           sh /root/BENCHMARK/setup_telegraf.sh
       fi
+      if [ ! `rpm -qa | grep fio` > /dev/null 2>&1 ]; then
+          yum install fio -y
+      fi
       fio_benchmark
 else
       mv benchmark.log $CURRENTPATH/benchmark.bak_$TIMESTAMP
