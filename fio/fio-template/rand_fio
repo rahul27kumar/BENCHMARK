@@ -7,5 +7,5 @@ time_based
 name=raw-randreadwrite 
 rw=randrw              
 
-[mpathi]
-filename=/dev/disk/by-id/dm-name-mpathi
+#[job1]
+#filename=/dev/disk/by-id/dm-name-diskname

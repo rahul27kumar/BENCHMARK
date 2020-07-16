@@ -10,6 +10,6 @@ rwmixread=20
 
 
 
-[mpathi]
-filename = /dev/disk/by-id/dm-name-mpathi
+#[job1]
+#filename = /dev/disk/by-id/dm-name-diskname
 

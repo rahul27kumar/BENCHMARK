@@ -10,6 +10,3 @@ rw=read
 #[job1]
 #filename=/dev/disk/by-id/dm-name-mpath
 
-
-[mpathi]
-filename = /dev/disk/by-id/dm-name-mpathi 
