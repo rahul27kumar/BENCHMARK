@@ -1,4 +1,9 @@
 #!/usr/bin/bash
+set -e
+#
+# Variables deaclaration
+#
+
 TIME_INTERVAL=""
 BLOCK_SIZE=""
 NUMOFJOBS=""
@@ -6,6 +11,9 @@ CURRENTPATH=`pwd`
 TIMESTAMP=`date +'%Y-%m-%d_%H:%M:%S'`
 SAMPLE=""
 TEMPLATE=""
+HOSTNAME=`hostname`
+DISKLIST=`find /opt/seagate -name cluster.sls | xargs cat | grep 'hostname\|data_device\|mpath' | grep -A 8 "$HOSTNAME" | cut -d "-" -f5 | grep mpath`
+
 
 validate_args() {
 
@@ -16,13 +24,13 @@ validate_args() {
 }
 
 show_usage() {
-        echo -e "\n \t  Usage : ./run_fiobenchmark.sh -t TIME_INTERVAL -bs BLOCK_SIZE -nj NUMOFJOBS -sm SAMPLE -tm TEMPLATE\n"
+        echo -e "\n \t  Usage : ./run_fiobenchmark.sh -t TIME_INTERVAL -bs BLOCK_SIZE -nj NUMOFJOBS -sm SAMPLE -tm TEMPLATE  \n"
         echo -e "\t -t\t:\t Run time (Duration) \n"
         echo -e "\t -bs\t:\t Blocksize\n"
         echo -e "\t -nj\t:\t Number of jobs\n"
         echo -e "\t -sm\t:\t Sampling time \n"
         echo -e "\t -tm\t:\t Template for fio like seq_read_fio, seq_write_fio, randmix_80-20_fio, randmix_20-80_fio and rand_fio \n"
-        echo -e "\tExample\t:\t ./run_fiobenchmark.sh -t 5 -bs 1M,4M,16M -nj 16,32,64 -sm 5 -tm seq_read_fio \n"
+        echo -e "\tExample\t:\t ./run_fiobenchmark.sh -t 5 -bs 1M,4M,16M -nj 16,32,64 -sm 5 -tm seq_read_fio  \n"
         exit 1
 }
 
@@ -32,19 +40,23 @@ fio_benchmark() {
        do
            for numjob in ${NUMOFJOBS//,/ }
            do 
-               
-               template_file=$CURRENTPATH/fio-template/$TEMPLATE
-               workload_file=$CURRENTPATH/benchmark.log/$TEMPLATE\_bs_$bs\_numjobs_$numjob
-               cp $template_file $workload_file
-               sed -i "/\[global\]/a bs=$bs" $workload_file
-               sed -i "/time_based/a runtime=$TIME_INTERVAL" $workload_file
-               sed -i "/runtime/a numjobs=$numjob" $workload_file
-               FIOLOG=benchmark.log/$TEMPLATE\_bs_$bs\_numjobs_$numjob\.log
-               fio --status-interval=$SAMPLE $workload_file > $FIOLOG & 
-               echo "Fio scripts is running..."
-               PID=$!
-               sleep 30
-               system_monitoring $bs $FIOLOG fio
+                   template_file=$CURRENTPATH/fio-template/$TEMPLATE
+                   workload_file=$CURRENTPATH/benchmark.log/$TEMPLATE\_bs_$bs\_numjobs_$numjob\_hostname_$HOSTNAME
+                   cp $template_file $workload_file
+                   sed -i "/\[global\]/a bs=$bs" $workload_file
+                   sed -i "/time_based/a runtime=$TIME_INTERVAL" $workload_file
+                   sed -i "/runtime/a numjobs=$numjob" $workload_file
+                   for disk in $DISKLIST
+                   do
+                       echo -e "\n[$disk]" >> $workload_file
+                       echo -e "filename = /dev/disk/by-id/dm-name-$disk \n" >> $workload_file 
+                   done
+                   FIOLOG=benchmark.log/$TEMPLATE\_bs_$bs\_numjobs_$numjob\.log
+                   fio --status-interval=$SAMPLE $workload_file > $FIOLOG & 
+                   echo "Fio scripts is running..."
+                   PID=$!
+                   sleep 30
+                   system_monitoring $bs $FIOLOG fio
            done
        done
 
@@ -52,7 +64,6 @@ fio_benchmark() {
 
 system_monitoring()
 {
-      echo "Client Server: System monitoring Started..." 
       systemctl start telegraf
       while [ true ]
       do
@@ -65,7 +76,6 @@ system_monitoring()
          fi
       done
       systemctl stop telegraf
-      echo "Client Server: System monitoring Stopping..."
 }
 
 
