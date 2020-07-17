@@ -54,7 +54,7 @@ fio_benchmark() {
                    fio --status-interval=$SAMPLE $workload_file > $FIOLOG & 
                    echo "Fio scripts is running..."
                    PID=$!
-                   sleep 10
+                   sleep 30
                    system_monitoring $bs $FIOLOG fio
            done
        done
