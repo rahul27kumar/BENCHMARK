@@ -16,15 +16,14 @@ while [ true ]
 do
     if  kill -0 $PID1 > /dev/null 2>&1 ;
     then
-        echo "Data is collecting..."
-        sleep $SAMPLE
+        continue
     else
+        echo "Fio scripts is completed sucessfully"
         break
     fi
     if  kill -0 $PID2 > /dev/null 2>&1 ;
     then
-        echo "Data is collecting..."
-        sleep $SAMPLE
+        continue
     else
         echo "Fio scripts is completed sucessfully"
         break
