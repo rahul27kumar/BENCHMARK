@@ -21,6 +21,6 @@ do
     curl -i -XPOST "$URL" --data-binary "$update_value_1" > /dev/null 2>&1;
     curl -i -XPOST "$URL" --data-binary "$update_value_2" > /dev/null 2>&1;
     curl -i -XPOST "$URL" --data-binary "$update_value_3" > /dev/null 2>&1;
-    echo "$ops Data captured for Latency, Throughput and IOPS..."
+    echo "$ops Data captured for Latency, Throughput and IOPS from $HOSTNAME ..."
 done < "DATA"
 
