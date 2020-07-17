@@ -52,7 +52,7 @@ fio_benchmark() {
                    done < "DISKLIST"
                    FIOLOG=benchmark.log/$TEMPLATE\_bs_$IOSIZE\_numjobs_$numjob\.log
                    fio --status-interval=$SAMPLE $workload_file > $FIOLOG & 
-                   echo "Fio scripts is running..."
+                   echo "Fio scripts is running on $HOSTNAME ..."
                    PID=$!
                    sleep 30
                    system_monitoring $bs $FIOLOG fio
