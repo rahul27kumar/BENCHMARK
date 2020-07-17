@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 set -e
 #
 # Variables deaclaration
@@ -28,7 +28,7 @@ show_usage() {
         echo -e "\t -nj\t:\t Number of jobs\n"
         echo -e "\t -sm\t:\t Sampling time \n"
         echo -e "\t -tm\t:\t Template for fio like seq_read_fio, seq_write_fio, randmix_80-20_fio, randmix_20-80_fio and rand_fio \n"
-        echo -e "\tExample\t:\t ./run_fiobenchmark.sh -t 5 -bs 1M,4M,16M -nj 16,32,64 -sm 5 -tm seq_read_fio  \n"
+        echo -e "\tExample\t:\t ./run_fiobenchmark.sh -t 5 -bs 1Mb,4Mb,16Mb -nj 16,32,64 -sm 5 -tm seq_read_fio  \n"
         exit 1
 }
 
@@ -37,11 +37,12 @@ fio_benchmark() {
        for bs in ${BLOCK_SIZE//,/ }
        do
            for numjob in ${NUMOFJOBS//,/ }
-           do 
+           do     
+                   IOSIZE=$(echo "$bs" | sed -e 's/Mb/M/g') 
                    template_file=$CURRENTPATH/fio-template/$TEMPLATE
-                   workload_file=$CURRENTPATH/benchmark.log/$TEMPLATE\_bs_$bs\_numjobs_$numjob\_hostname_$HOSTNAME
+                   workload_file=$CURRENTPATH/benchmark.log/$TEMPLATE\_bs_$IOSIZE\_numjobs_$numjob\_hostname_$HOSTNAME
                    cp $template_file $workload_file
-                   sed -i "/\[global\]/a bs=$bs" $workload_file
+                   sed -i "/\[global\]/a bs=$IOSIZE" $workload_file
                    sed -i "/time_based/a runtime=$TIME_INTERVAL" $workload_file
                    sed -i "/runtime/a numjobs=$numjob" $workload_file
                    while IFS=  read -r disk
@@ -49,11 +50,11 @@ fio_benchmark() {
                        echo -e "\n[$disk]" >> $workload_file
                        echo -e "filename = /dev/disk/by-id/dm-name-$disk \n" >> $workload_file 
                    done < "DISKLIST"
-                   FIOLOG=benchmark.log/$TEMPLATE\_bs_$bs\_numjobs_$numjob\.log
+                   FIOLOG=benchmark.log/$TEMPLATE\_bs_$IOSIZE\_numjobs_$numjob\.log
                    fio --status-interval=$SAMPLE $workload_file > $FIOLOG & 
                    echo "Fio scripts is running..."
                    PID=$!
-                   sleep 30
+                   sleep 10
                    system_monitoring $bs $FIOLOG fio
            done
        done
