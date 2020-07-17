@@ -62,7 +62,6 @@ fio_benchmark() {
 
 system_monitoring()
 {
-      systemctl start telegraf
       while [ true ]
       do
          if kill -0 $PID > /dev/null 2>&1;
@@ -73,10 +72,7 @@ system_monitoring()
              break
          fi
       done
-      systemctl stop telegraf
 }
-
-
 
 
 
