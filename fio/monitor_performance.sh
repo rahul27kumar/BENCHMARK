@@ -7,7 +7,7 @@ OBJECT_SIZE=$(echo "$1" | sed -e 's/M/Mb/g' )
 BENCHMARK=$3
 
 
-tail -n 36 $2 | grep -e 'read\|write' > DATA
+tail -n 40 $2 | grep -e 'read\|write' > DATA
 while IFS= read -r line
 do
     OPS=$(echo "$line" | awk '{print $1}'| tr -d ':' | tr -d ' ' )

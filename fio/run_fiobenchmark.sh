@@ -28,7 +28,7 @@ show_usage() {
         echo -e "\t -nj\t:\t Number of jobs\n"
         echo -e "\t -sm\t:\t Sampling time \n"
         echo -e "\t -tm\t:\t Template for fio like seq_read_fio, seq_write_fio, randmix_80-20_fio, randmix_20-80_fio and rand_fio \n"
-        echo -e "\tExample\t:\t ./run_fiobenchmark.sh -t 5 -bs 1Mb,4Mb,16Mb -nj 16,32,64 -sm 5 -tm seq_read_fio  \n"
+        echo -e "\tExample\t:\t ./run_fiobenchmark.sh -t 300 -bs 1Mb,4Mb,16Mb -nj 16,32,64 -sm 5 -tm seq_read_fio  \n"
         exit 1
 }
 
