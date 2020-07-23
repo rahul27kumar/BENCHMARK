@@ -3,7 +3,7 @@ BENCHMARK_PATH=/root/go/bin
 CURRENTPATH=`pwd`
 ACCESS_KEY=`cat /root/.aws/credentials | grep -A 3 default | grep aws_access_key_id | cut -d " " -f3`		
 SECRET_KEY=`cat /root/.aws/credentials | grep -A 3 default | grep secret_access_key | cut -d " " -f3` 	
-BENCHMARKLOG=/root/BENCHMARK/hsbench/benchmark.log
+BENCHMARKLOG=$CURRENTPATH/benchmark.log
 NO_OF_BUCKET=""  				
 TEST_DURATION=600   				
 BUCKET_PREFIX=Seagate  		
@@ -60,7 +60,7 @@ hotsause_benchmark()
            do
                for size in ${!OBJ_SIZE[@]}
                do
-                 echo "Thread: ${THREAD[$index]} \t SAMPLE: ${SAMPLES[$nc]} \t OBJECT_SIZE: ${OBJ_SIZE[$size]}"        
+                 echo -e "Thread: ${THREAD[$index]} \t SAMPLE: ${SAMPLES[$nc]} \t OBJECT_SIZE: ${OBJ_SIZE[$size]}"        
                  JSON_FILENAME=NT_${THREAD[$index]}\_NB_${SAMPLES[$nc]}\_object_size_${OBJ_SIZE[$size]}\.json
                  obj_size=$(echo "${OBJ_SIZE[$size]}" | tr -d 'b')
                  echo "$BENCHMARK_PATH/hsbench -a $ACCESS_KEY -s $SECRET_KEY -u $ENDPOINTS -z $obj_size -d $TEST_DURATION -t ${THREAD[$index]} -b $NO_OF_BUCKET -n ${SAMPLES[$nc]} -r $REGION -j $JSON_FILENAME"
@@ -72,8 +72,6 @@ hotsause_benchmark()
         done
         mv $CURRENTPATH/*.json $CURRENTPATH/benchmark.log/$MKDIR/
         COUNT=$(($COUNT + 1))
-        #sleep 30
-       # python3 /root/perf_testing/table_formatter.py $BENCHMARKLOG/$MKDIR/    #> /root/perf_testing/table.log/$MKDIR\.table
     done
 } 
 
