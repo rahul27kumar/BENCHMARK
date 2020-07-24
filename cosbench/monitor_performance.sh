@@ -27,11 +27,13 @@ do
         ops1=${op^}
         update_value_1="Latency,host=`hostname`,operation=$ops1,Obj_size=$size,Benchmark_Type=$BENCHMARK,region=us-west value=$Lat"
         update_value_2="Throughput,host=`hostname`,operation=$ops1,Obj_size=$size,Benchmark_Type=$BENCHMARK,region=us-west value=$value"
-        update_value_3="IOPS,host=`hostname`,operation=$ops1,Obj_size=$size,Benchmark_Type=$BENCHMARK,region=us-west value=$iops"
+        update_value_3="IOPS,host=`hostname`,operation=$ops1,Obj_size=$size,Benchmark_Type=$BENCHMARK,region=us-west value=$iops1"
         curl -i -XPOST "$URL" --data-binary "$update_value_1"  > /dev/null 2>&1;
         curl -i -XPOST "$URL" --data-binary "$update_value_2"  > /dev/null 2>&1;
         curl -i -XPOST "$URL" --data-binary "$update_value_3"  > /dev/null 2>&1;
         echo "$ops1 Data captured for latency, throughput and IOPS..."
+   else 
+        break
    fi
 
 done
