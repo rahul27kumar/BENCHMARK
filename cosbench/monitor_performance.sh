@@ -4,7 +4,6 @@ INFLUXDB=`cat /etc/telegraf/telegraf.conf | grep -A 3 outputs.influxdb | grep ur
 URL="$INFLUXDB/write?db=$benchmarkdb"
 host=`hostname`
 OBJECT_SIZE=$(echo "$1" | tr -d 'Mb')
-echo "OBJECT_SIZE : $OBJECT_SIZE"
 BENCHMARK=$3
 line=$(tail -n 1 $2)
 OPS=$(echo "$line" | grep -o '\"opType\":\"[a-z]*\"' | cut -d ':' -f2 | tr -d "\"" )
@@ -30,9 +29,9 @@ do
         echo "update_value_1 : $update_value_1"
         echo "update_value_2 : $update_value_2"
         echo "update_value_3 : $update_value_3"
-        curl -i -XPOST "$URL" --data-binary "$update_value_1"  #> /dev/null 2>&1;
-        curl -i -XPOST "$URL" --data-binary "$update_value_2"  #> /dev/null 2>&1;
-        curl -i -XPOST "$URL" --data-binary "$update_value_3"  #> /dev/null 2>&1;
+        curl -i -XPOST "$URL" --data-binary "$update_value_1"  > /dev/null 2>&1;
+        curl -i -XPOST "$URL" --data-binary "$update_value_2"  > /dev/null 2>&1;
+        curl -i -XPOST "$URL" --data-binary "$update_value_3"  > /dev/null 2>&1;
         echo "$ops1 Data captured for latency, throughput and IOPS..."
    else 
         break
