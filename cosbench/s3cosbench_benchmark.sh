@@ -57,7 +57,7 @@ config_s3workloads() {
                     sh configure.sh
                     sh run-test.sh --s3setup s3setup.properties --controller $HOSTNAME --workload $workload_file
                     echo "System monitoring started"
-                    system_monitoring
+                    system_monitoring $io_size
                     echo "System monitoring stopped"
                done
           done
@@ -77,7 +77,7 @@ system_monitoring()
              then
                 break
              else
-                ./monitor_performance.sh $size ~/cos/log/system.log cosbench
+                ./monitor_performance.sh $1 ~/cos/log/system.log cosbench
                 sleep $SAMPLE
              fi
          
