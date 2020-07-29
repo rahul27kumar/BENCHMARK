@@ -46,7 +46,7 @@ config_s3workloads() {
           do
                for io_size in ${object_size_in_mb//,/ }
                do
-                    workload_file=$LOG/workloads_workers_$clients\_sample_$sample\_size_$io_size
+                    workload_file=$LOG/workloads_workers_$clients\_sample_$sample\_size_$io_size\.log
                     size=$(echo "$io_size" | tr -d 'Mb')
                     echo "no_of_workers=$clients" > $workload_file
                     echo "no_of_objects=$sample" >> $workload_file
@@ -57,7 +57,7 @@ config_s3workloads() {
                     sh configure.sh
                     sh run-test.sh --s3setup s3setup.properties --controller $HOSTNAME --workload $workload_file
                     echo "System monitoring started"
-                    system_monitoring $io_size
+                    system_monitoring $io_size $workload_file
                     echo "System monitoring stopped"
                done
           done
@@ -77,7 +77,7 @@ system_monitoring()
              then
                 break
              else
-                ./monitor_performance.sh $1 ~/cos/log/system.log cosbench
+                ./monitor_performance.sh $1 ~/cos/log/system.log cosbench $2
                 sleep $SAMPLE
              fi
          
