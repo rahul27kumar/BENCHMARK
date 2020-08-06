@@ -3,5 +3,5 @@ if [ ! `rpm -qa | grep telegraf` > /dev/null 2>&1 ]; then
   cd /root/BENCHMARK
   sh setup_telegraf.sh 
 else 
-   echo "Telegraf is already installed"
+   echo -e "\n \t Telegraf is already installed \n"
 fi
