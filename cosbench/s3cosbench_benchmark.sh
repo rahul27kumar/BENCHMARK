@@ -123,7 +123,10 @@ while [ ! -z $1 ]; do
 done
 
 validate_args
-
+# It will configure Cosbenchmark it's not available
+#
+./installCosbench.sh `hostname`
+#
 if [ ! -d $LOG ]; then
       mkdir $LOG
       config_s3workloads

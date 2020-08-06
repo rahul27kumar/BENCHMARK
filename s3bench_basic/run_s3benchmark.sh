@@ -129,6 +129,11 @@ while [ ! -z $1 ]; do
 done
 
 validate_args
+#
+# It will configure s3benchmark tools if it's not available
+#
+./installS3bench.sh
+#
 if [ ! -d $BENCHMARKLOG ]; then
       mkdir $BENCHMARKLOG
       if [ ! `rpm -qa | grep telegraf` > /dev/null 2>&1 ]; then
